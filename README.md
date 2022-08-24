@@ -1,6 +1,6 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+![unicycle model](doc/unicycle_model.png "Title")
 
 ### What is this repository for? ###
 
