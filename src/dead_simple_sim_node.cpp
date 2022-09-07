@@ -1,19 +1,7 @@
-#include <mutex>
-
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 
 #include <dead_simple_sim/dead_simple_sim.hpp>
-
-void update_model_timer_cb(const ros::TimerEvent& event, UnicycleModel* um)
-{
-    um->update_model();
-}
-
-void cmd_vel_cb(const geometry_msgs::TwistConstPtr& cmd_vel, UnicycleModel* um)
-{
-    um->update_cmd_vel(*cmd_vel);
-}
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "dead_simple_sim");
