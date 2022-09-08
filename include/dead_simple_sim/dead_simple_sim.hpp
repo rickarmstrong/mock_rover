@@ -28,18 +28,20 @@ public:
     UnicycleModel(const UnicycleModel& other) = delete;
     void update_cmd_vel(const geometry_msgs::Twist& cmd_vel)
     {
-        std::lock_guard<std::mutex> lock(this->cur_cmd_vel_mutex);
+        std::scoped_lock<std::mutex> lock(cur_cmd_vel_mutex);
         cur_cmd_vel = geometry_msgs::Twist(cmd_vel);
     }
 
     void update_model()
     {
-        std::lock_guard<std::mutex> lock(this->vs_mutex);
+        std::scoped_lock<std::mutex, std::mutex> lock(vs_mutex, cur_cmd_vel_mutex);
+        vs.x_dot += (MAX_LINEAR_ACC * MIN_TIME_STEP_S);
     }
 
-    const VehicleState& get_vehicle_state() const
+    VehicleState get_vehicle_state()
     {
-
+        std::scoped_lock<std::mutex> lock(vs_mutex);
+        return VehicleState{vs};
     }
 private:
     VehicleState vs;
