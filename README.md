@@ -1,4 +1,4 @@
-# Dead Simple Sim #
+# mock_rover #
 
 [Unicycle Model](https://stanfordasl.github.io/aa274a/pdfs/notes/lecture1.pdf):
 
