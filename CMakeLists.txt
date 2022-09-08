@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(mock_rover)
 
-## Compile as C++11, supported in ROS Kinetic and newer
+## C++11 is supported in ROS Kinetic and newer, but I hear
+## C++17 works, too.
 add_compile_options(-std=c++17)
 
 ## Find catkin macros and libraries
@@ -18,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -106,10 +107,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES mock_rover
-  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy sensor_msgs std_msgs
-  DEPENDS system_lib
+#  INCLUDE_DIRS include
+#  LIBRARIES mock_rover
+#  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy sensor_msgs std_msgs
+#  DEPENDS system_lib
 )
 
 ###########
@@ -124,9 +125,6 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/mock_rover.cpp
-# )
 add_library(${PROJECT_NAME}
   src/mock_rover_node.cpp
 )
@@ -155,7 +153,14 @@ add_executable(${PROJECT_NAME}_node
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
+  Eigen3::Eigen
 )
+
+target_link_libraries(${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  Eigen3::Eigen
+)
+
 
 #############
 ## Install ##
