@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>dead_simple_sim</name>
+  <name>mock_rover</name>
   <version>0.1.0</version>
   <description>Trivial rover platform simulation, for use in automated testing.</description>
   <maintainer email="waitingfortheelectrician@gmail.com">Rick Arsmtrong</maintainer>
   <license>BSD 3-clause</license>
-  <url type="repo">https://bitbucket.org/rick_armstrong/dead_simple_sim/</url>
+  <url type="repo">https://bitbucket.org/rick_armstrong/mock_rover/</url>
   <author email="waitingfortheelectrician@gmail.com">Rick Armstrong</author>
 
 

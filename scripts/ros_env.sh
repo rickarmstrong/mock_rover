@@ -16,7 +16,7 @@ DISTRO=${tokens[3]}
 . /opt/ros/${DISTRO}/setup.bash
 
 # Load this project's environment.
-CATKIN_WS=../../dead_simple_sim_ws
+CATKIN_WS=../../mock_rover_ws
 . ${CATKIN_WS}/devel/setup.bash
 
 # Activate our virtualenv.

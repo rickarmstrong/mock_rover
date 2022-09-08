@@ -1,10 +1,10 @@
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 
-#include <dead_simple_sim/dead_simple_sim.hpp>
+#include <mock_rover/mock_rover.hpp>
 
 int main(int argc, char** argv){
-    ros::init(argc, argv, "dead_simple_sim");
+    ros::init(argc, argv, "mock_rover");
     ros::NodeHandle nh;
 
     UnicycleModel um;

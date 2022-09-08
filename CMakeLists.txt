@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(dead_simple_sim)
+project(mock_rover)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++17)
@@ -107,7 +107,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES dead_simple_sim
+  LIBRARIES mock_rover
   CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy sensor_msgs std_msgs
   DEPENDS system_lib
 )
@@ -125,10 +125,10 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/dead_simple_sim.cpp
+#   src/${PROJECT_NAME}/mock_rover.cpp
 # )
 add_library(${PROJECT_NAME}
-  src/dead_simple_sim_node.cpp
+  src/mock_rover_node.cpp
 )
 
 ## Add cmake target dependencies of the library
@@ -140,7 +140,7 @@ add_library(${PROJECT_NAME}
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node
-        src/dead_simple_sim_node.cpp)
+        src/mock_rover_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -204,7 +204,7 @@ target_link_libraries(${PROJECT_NAME}_node
 #############
 
 ## Add gtest based cpp test target and link libraries
-catkin_add_gtest(${PROJECT_NAME}-test test/test_dead_simple_sim.cpp)
+catkin_add_gtest(${PROJECT_NAME}-test test/test_mock_rover.cpp)
 if(TARGET ${PROJECT_NAME}-test)
   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME} ${catkin_LIBRARIES})
 endif()

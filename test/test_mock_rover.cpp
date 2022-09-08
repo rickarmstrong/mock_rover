@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <dead_simple_sim/dead_simple_sim.hpp>
+#include <mock_rover/mock_rover.hpp>
 TEST(UnicycleModelTest, ConstructModel)
 {
     UnicycleModel um;
