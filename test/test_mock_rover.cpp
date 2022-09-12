@@ -43,6 +43,8 @@ TEST(UnicycleModelTest, ZeroToOne) {
         std::cout << "x_dot: "<< um.get_vehicle_state().x_dot << " "
                   << "x: " << um.get_vehicle_state().x << "\n";
     }
+
+    // Should be stopped now.
     vx = um.get_vehicle_state().x_dot;
     ASSERT_TRUE(vx == 0.0);
 }
