@@ -14,9 +14,15 @@ int main(int argc, char** argv){
 
     // Sensors receive all vehicle state updates, and publish on their own respective schedules.
     std::vector<std::unique_ptr<Sensor>> sensors;
+
+    // Odometer.
     ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 10);
     auto odom_pub_ptr = std::make_unique<ros::Publisher>(odom_pub);
     sensors.push_back(std::make_unique<Odometer>(odom_pub_ptr));
+
+    // TODO: IMU.
+
+    // TODO: GPS.
 
     // Model update timer, ticks all sensors at (1/MIN_TIME_STEP_S) Hz.
     UnicycleModel um;
