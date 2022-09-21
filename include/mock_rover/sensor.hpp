@@ -30,6 +30,7 @@ private:
 
 void Odometer::update(const ros::TimerEvent& event, const VehicleState& vs) {
     nav_msgs::Odometry odom_msg;
+    odom_msg.header.frame_id = "base_link";
     odom_msg.twist.twist.linear.x = vs.x_dot;
     odom_msg.pose.pose.position.x = vs.x;
     odom_pub_->publish(odom_msg);

@@ -1,0 +1,3 @@
+<launch>
+    <node name="mock_rover" pkg="mock_rover" type="mock_rover_node" />
+</launch>
