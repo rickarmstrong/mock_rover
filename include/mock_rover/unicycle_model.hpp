@@ -18,11 +18,14 @@ const double MAX_ANGULAR_VEL = 1.0; // radians/s
 
 class VehicleState {
 public:
+    // Expressed in the odom frame.
     double x{};
     double y{};
     double theta{};
+
+    // Expressed in the vehicle frame.
     double x_dot{};
-    double y_dot{};
+    double y_dot{};  // Always zero.
     double theta_dot{};
 };
 
