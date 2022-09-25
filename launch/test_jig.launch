@@ -3,7 +3,9 @@
     <include file="$(find mock_rover)/launch/mock_rover.launch" />
 
     <!-- Generate /cmd_vel messages using the keyboard -->
-    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" />
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard">
+        <remap from="/cmd_vel" to="/mock_rover/cmd_vel" />
+    </node>
 
     <!-- Visualize sensor outputs. -->
     <node pkg="tf2_ros" type="static_transform_publisher" name="static_map_base_link" args="0 0 0 0 0 0 1 map odom" />
