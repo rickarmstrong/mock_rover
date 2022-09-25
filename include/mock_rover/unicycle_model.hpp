@@ -76,7 +76,8 @@ private:
 
     double incr_angular_vel()
     {
-        double theta_diff = cur_cmd_vel_.angular.z - vs_.theta_dot; // Difference between commanded and current angular velocity.
+        // theta_diff: difference between commanded and current angular velocity.
+        double theta_diff = cur_cmd_vel_.angular.z - vs_.theta_dot;
         if (fabs(theta_diff) >= MAX_DELTA_THETA) {
             vs_.theta_dot += MAX_DELTA_THETA * boost::math::sign(theta_diff);
         } else {
