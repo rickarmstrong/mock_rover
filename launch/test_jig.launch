@@ -1,3 +1,4 @@
+<!-- Manual, interactive test: start mock_rover, teleop_twist_keyboard, and RViz. -->
 <launch>
     <include file="$(find mock_rover)/launch/mock_rover.launch" />
 

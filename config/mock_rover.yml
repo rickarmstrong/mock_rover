@@ -1,0 +1,7 @@
+---
+mock_rover:
+  cmd_vel_topic: /mock_rover/cmd_vel
+  odom_topic: /mock_rover/odom
+  base_frame: base_link
+  odom_frame: odom
+  tick_rate_hz: 20.0

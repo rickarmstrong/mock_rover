@@ -1,3 +1,7 @@
 <launch>
+    <!-- Load config. -->
+    <rosparam command="load" file="$(find mock_rover)/config/mock_rover.yml" />
+
+    <!-- Go. -->
     <node name="mock_rover" pkg="mock_rover" type="mock_rover_node" />
 </launch>

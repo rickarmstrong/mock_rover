@@ -9,13 +9,8 @@
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 
-// Shortest time delta; model is updated at 1 / MIN_TIME_STEP_S Hz.
-constexpr double MIN_TIME_STEP_S = 0.05;
-
-constexpr double MAX_LINEAR_ACC = 0.5; // m/s^2
-constexpr double MAX_DELTA_V = MAX_LINEAR_ACC *  MIN_TIME_STEP_S;
-constexpr double MAX_ANGULAR_VEL = 1.0; // radians/s
-constexpr double MAX_DELTA_THETA = MAX_ANGULAR_VEL * MIN_TIME_STEP_S;
+static constexpr double MAX_LINEAR_ACC = 0.5; // m/s^2
+static constexpr double MAX_ANGULAR_VEL = 1.0; // radians/s
 
 class VehicleState {
 public:
@@ -32,8 +27,11 @@ public:
 
 class UnicycleModel {
 public:
-    UnicycleModel() = default;
-
+    explicit UnicycleModel(double tick_rate):
+        tick_rate_(tick_rate),
+        max_delta_v(MAX_LINEAR_ACC * tick_rate),
+        max_delta_theta(MAX_ANGULAR_VEL * tick_rate){}
+    UnicycleModel() = delete;
     UnicycleModel(const UnicycleModel &other) = delete;
 
     void update_cmd_vel(const geometry_msgs::Twist &cmd_vel) {
@@ -55,10 +53,21 @@ public:
         return VehicleState{vs_};
     }
 
+    double get_tick_rate() const { return tick_rate_; }
+
 private:
+    double tick_rate_;
+
+    // Maximum linear velocity increment per model update cycle.
+    double max_delta_v;
+
+    // Maximum angular velocity increment per model update cycle.
+    double max_delta_theta;
+
     VehicleState vs_;
     std::mutex vs_mutex_;
 
+    // Current commanded velocity (linear, angular).
     geometry_msgs::Twist cur_cmd_vel_;
     std::mutex cur_cmd_vel_mutex_;
 
@@ -67,8 +76,8 @@ private:
         // Update velocity. Don't bother with y; the Unicycle model does
         // not allow movement in the vehicle y-axes.
         double v_diff = cur_cmd_vel_.linear.x - vs_.x_dot; // Difference between commanded and current linear velocity.
-        if (fabs(v_diff) >= MAX_DELTA_V) {
-            vs_.x_dot += MAX_DELTA_V * boost::math::sign(v_diff);
+        if (fabs(v_diff) >= max_delta_v) {
+            vs_.x_dot += max_delta_v * boost::math::sign(v_diff);
         } else {
             vs_.x_dot = cur_cmd_vel_.linear.x;
         }
@@ -78,8 +87,8 @@ private:
     {
         // theta_diff: difference between commanded and current angular velocity.
         double theta_diff = cur_cmd_vel_.angular.z - vs_.theta_dot;
-        if (fabs(theta_diff) >= MAX_DELTA_THETA) {
-            vs_.theta_dot += MAX_DELTA_THETA * boost::math::sign(theta_diff);
+        if (fabs(theta_diff) >= max_delta_theta) {
+            vs_.theta_dot += max_delta_theta * boost::math::sign(theta_diff);
         } else {
             vs_.theta_dot = cur_cmd_vel_.angular.z;
         }
@@ -87,9 +96,9 @@ private:
 
     double incr_pose()
     {
-        vs_.theta += vs_.theta_dot * MIN_TIME_STEP_S;
-        vs_.x += vs_.x_dot * std::cos(vs_.theta) * MIN_TIME_STEP_S;
-        vs_.y += vs_.x_dot * std::sin(vs_.theta) * MIN_TIME_STEP_S;
+        vs_.theta += vs_.theta_dot * (1.0 / tick_rate_);
+        vs_.x += vs_.x_dot * std::cos(vs_.theta) * (1.0 / tick_rate_);
+        vs_.y += vs_.x_dot * std::sin(vs_.theta) * (1.0 / tick_rate_);
     }
 };
 
