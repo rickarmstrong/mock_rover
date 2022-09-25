@@ -10,7 +10,7 @@
 #include <ros/ros.h>
 
 // Shortest time delta; model is updated at 1 / MIN_TIME_STEP_S Hz.
-const double MIN_TIME_STEP_S = 0.1;
+const double MIN_TIME_STEP_S = 0.05;
 
 const double MAX_LINEAR_ACC = 0.5; // m/s/s
 const double MAX_DELTA_V = MAX_LINEAR_ACC *  MIN_TIME_STEP_S;
@@ -43,7 +43,7 @@ public:
     {
         std::scoped_lock<std::mutex, std::mutex> lock(vs_mutex_, cur_cmd_vel_mutex_);
 
-        // Update velocities (x, theta). Dont' bother with y; Unicycle model does
+        // Update velocities (x, theta). Dont' bother with y; the Unicycle model does
         // not allow movement in the vehicle y-axes.
         double v_diff = cur_cmd_vel_.linear.x - vs_.x_dot;
         if(fabs(v_diff) >= MAX_DELTA_V)
