@@ -28,9 +28,9 @@ public:
 class UnicycleModel {
 public:
     explicit UnicycleModel(double tick_rate):
-        tick_rate_(tick_rate),
-        max_delta_v(MAX_LINEAR_ACC * tick_rate),
-        max_delta_theta(MAX_ANGULAR_VEL * tick_rate){}
+            tick_rate_(tick_rate),
+            delta_v_(MAX_LINEAR_ACC / tick_rate),
+            delta_theta_(MAX_ANGULAR_VEL / tick_rate){}
     UnicycleModel() = delete;
     UnicycleModel(const UnicycleModel &other) = delete;
 
@@ -59,10 +59,10 @@ private:
     double tick_rate_;
 
     // Maximum linear velocity increment per model update cycle.
-    double max_delta_v;
+    double delta_v_;
 
     // Maximum angular velocity increment per model update cycle.
-    double max_delta_theta;
+    double delta_theta_;
 
     VehicleState vs_;
     std::mutex vs_mutex_;
@@ -76,8 +76,8 @@ private:
         // Update velocity. Don't bother with y; the Unicycle model does
         // not allow movement in the vehicle y-axes.
         double v_diff = cur_cmd_vel_.linear.x - vs_.x_dot; // Difference between commanded and current linear velocity.
-        if (fabs(v_diff) >= max_delta_v) {
-            vs_.x_dot += max_delta_v * boost::math::sign(v_diff);
+        if (fabs(v_diff) >= delta_v_) {
+            vs_.x_dot += delta_v_ * boost::math::sign(v_diff);
         } else {
             vs_.x_dot = cur_cmd_vel_.linear.x;
         }
@@ -87,8 +87,8 @@ private:
     {
         // theta_diff: difference between commanded and current angular velocity.
         double theta_diff = cur_cmd_vel_.angular.z - vs_.theta_dot;
-        if (fabs(theta_diff) >= max_delta_theta) {
-            vs_.theta_dot += max_delta_theta * boost::math::sign(theta_diff);
+        if (fabs(theta_diff) >= delta_theta_) {
+            vs_.theta_dot += delta_theta_ * boost::math::sign(theta_diff);
         } else {
             vs_.theta_dot = cur_cmd_vel_.angular.z;
         }
