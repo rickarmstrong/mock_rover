@@ -3,6 +3,7 @@
 #include "mock_rover/sensor.hpp"
 
 class Odometer : public Sensor {
+    // TODO: allow for differing publishing rates.
     static constexpr double PUBLISH_RATE_HZ = 3.0;
 public:
     ~Odometer() override = default;
