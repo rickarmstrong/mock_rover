@@ -1,5 +1,8 @@
 #ifndef ODOMETER_HPP
 #define ODOMETER_HPP
+#include <ros/ros.h>
+#include <nav_msgs/Odometry.h>
+
 #include "mock_rover/sensor.hpp"
 
 class Odometer : public Sensor {
@@ -9,11 +12,8 @@ public:
     ~Odometer() override = default;
     Odometer() = delete;
     Odometer(const Odometer& o) = delete;
-    explicit Odometer(const std::unique_ptr<ros::Publisher>& pub) : odom_pub_(pub) {}
+    explicit Odometer(const std::unique_ptr<ros::Publisher>& pub) : Sensor(pub) {}
     void update(const ros::TimerEvent& event, const VehicleState& vs) override;
-
-private:
-    const std::unique_ptr<ros::Publisher>& odom_pub_;
 };
 
 // Construct a nav_msgs::Odometry message from the current vehicle state, and publish it.
@@ -37,6 +37,6 @@ void Odometer::update(const ros::TimerEvent& event, const VehicleState& vs) {
     // Velocities.
     odom_msg.twist.twist.linear.x = vs.x_dot;
     odom_msg.twist.twist.angular.z = vs.theta_dot;
-    odom_pub_->publish(odom_msg);
+    pub_->publish(odom_msg);
 }
 #endif //ODOMETER_HPP
