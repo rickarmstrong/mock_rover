@@ -5,3 +5,7 @@ mock_rover:
   base_frame: base_link
   odom_frame: odom
   tick_rate_hz: 20.0
+  datum:
+    lat: 45.0
+    lon: -122.0
+    heading_ned_degrees: 0.0

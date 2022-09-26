@@ -18,6 +18,7 @@ public:
 
 // Construct a nav_msgs::Odometry message from the current vehicle state, and publish it.
 void Odometer::update(const ros::TimerEvent& event, const VehicleState& vs) {
+    // TODO: populate header and covariances.
     nav_msgs::Odometry odom_msg;
     odom_msg.header.frame_id = "odom";
     odom_msg.child_frame_id = "base_link";

@@ -7,6 +7,7 @@
 
 #include "mock_rover/mock_rover.hpp"
 #include "mock_rover/odometer.hpp"
+#include "mock_rover/gps.hpp"
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "mock_rover");
@@ -23,9 +24,19 @@ int main(int argc, char** argv){
     auto odom_pub_ptr = std::make_unique<ros::Publisher>(odom_pub);
     sensors.push_back(std::make_unique<Odometer>(odom_pub_ptr));
 
-    // TODO: IMU.
+    // GPS.
+    float map_origin_lat;
+    float map_origin_lon;
+    ros::param::get("mock_rover/datum/lat", map_origin_lat);
+    ros::param::get("mock_rover/datum/lon", map_origin_lon);
+    Datum datum{map_origin_lat, map_origin_lon, 0.0};
+    std::string gps_topic;
+    ros::param::param<std::string>("mock_rover/gps_topic", gps_topic, "gps");
+    ros::Publisher gps_pub = nh.advertise<sensor_msgs::NavSatFix>(gps_topic, 10);
+    auto gps_pub_ptr = std::make_unique<ros::Publisher>(gps_pub);
+    sensors.push_back(std::make_unique<Gps>(gps_pub_ptr, datum));
 
-    // TODO: GPS.
+    // TODO: implement IMU.
 
     // Model update timer, ticks all sensors at (1/MIN_TIME_STEP_S) Hz.
     float tick_rate;

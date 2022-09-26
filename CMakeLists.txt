@@ -20,6 +20,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "/usr/share/cmake/geographiclib/")
+find_package (GeographicLib REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -122,12 +124,13 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
+  ${GeographicLib_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
   src/mock_rover_node.cpp
-        include/mock_rover/sensor.hpp include/mock_rover/unicycle_model.hpp include/mock_rover/odometer.hpp)
+        include/mock_rover/sensor.hpp include/mock_rover/unicycle_model.hpp include/mock_rover/odometer.hpp include/mock_rover/gps.hpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -138,7 +141,7 @@ add_library(${PROJECT_NAME}
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node
-        src/mock_rover_node.cpp include/mock_rover/sensor.hpp include/mock_rover/unicycle_model.hpp include/mock_rover/odometer.hpp)
+        src/mock_rover_node.cpp include/mock_rover/sensor.hpp include/mock_rover/unicycle_model.hpp include/mock_rover/odometer.hpp include/mock_rover/gps.hpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -154,11 +157,13 @@ add_executable(${PROJECT_NAME}_node
 target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
   Eigen3::Eigen
+  ${GeographicLib_LIBRARIES}
 )
 
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
   Eigen3::Eigen
+  ${GeographicLib_LIBRARIES}
 )
 
 
