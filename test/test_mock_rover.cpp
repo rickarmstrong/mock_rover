@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
+
+#include "mock_rover/mock_rover.hpp"
+
 static float TICK_RATE_HZ = 10.0;
 
-#include <mock_rover/mock_rover.hpp>
 TEST(UnicycleModelTest, ConstructModel)
 {
     UnicycleModel um(TICK_RATE_HZ);

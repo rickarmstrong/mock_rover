@@ -1,8 +1,8 @@
 #ifndef MOCK_ROVER_HPP
 #define MOCK_ROVER_HPP
 
-#include <mock_rover/sensor.hpp>
-#include <mock_rover/unicycle_model.hpp>
+#include "mock_rover/sensor.hpp"
+#include "mock_rover/unicycle_model.hpp"
 
 void update_model_timer_cb(const ros::TimerEvent& event,
                            UnicycleModel* um,

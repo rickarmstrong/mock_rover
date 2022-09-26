@@ -5,8 +5,8 @@
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 
-#include <mock_rover/mock_rover.hpp>
-#include <mock_rover/sensor.hpp>
+#include "mock_rover/mock_rover.hpp"
+#include "mock_rover/odometer.hpp"
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "mock_rover");
