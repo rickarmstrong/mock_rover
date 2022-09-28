@@ -9,9 +9,11 @@
 
 #include "mock_rover/unicycle_model.hpp"
 
-// Base class for a sensor model that takes the instantaneous vehicle state,
-// transforms the data in some way, and publishes on a single ROS topic.
-// We assume that every subclass publishes to _one_ topic.
+/**
+ * Base class for a sensor model that takes the instantaneous vehicle state,
+ * transforms the data in some way, and publishes on a single ROS topic.
+ * We assume that every subclass publishes to _one_ topic.
+ */
 class Sensor {
 public:
     Sensor() = delete;
