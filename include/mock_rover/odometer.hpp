@@ -12,7 +12,7 @@ public:
     ~Odometer() override = default;
     Odometer() = delete;
     Odometer(const Odometer& o) = delete;
-    explicit Odometer(const std::unique_ptr<ros::Publisher>& pub) : Sensor(pub) {}
+    explicit Odometer(const std::unique_ptr<ros::Publisher>& pub, double publish_rate) : Sensor(pub, publish_rate) {}
     void update(const ros::TimerEvent& event, const VehicleState& vs) override;
 };
 

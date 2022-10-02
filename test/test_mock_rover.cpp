@@ -19,7 +19,6 @@ TEST(UnicycleModelTest, ZeroToOne) {
     ASSERT_TRUE(um.get_vehicle_state().x_dot == 0.0);
     ASSERT_TRUE(um.get_vehicle_state().x == 0.0);
 
-    ////////
     // Set a non-zero linear velocity, and step the model forward.
     geometry_msgs::Twist cmd_vel;
     cmd_vel.linear.x = 1.0; // 1 m/s forward
@@ -57,8 +56,9 @@ TEST(GpsTest, OdomToLatLon)
     // Round-trip the odom frame origin, assuming map and odom are coincident.
     ros::Publisher dummy;
     auto dummy_pub_ptr = std::make_unique<ros::Publisher>(dummy);
+    float pub_rate{1.0};
     Datum map_frame_origin{45.0, -122.0, 0.0};
-    Gps gps(dummy_pub_ptr, map_frame_origin);
+    Gps gps(dummy_pub_ptr, pub_rate, map_frame_origin);
     GeographicLib::GeoCoords ll = gps.odom_to_lat_lon(0.0, 0.0);
     ASSERT_NEAR(ll.Latitude(), 45.0, 0.001);
     ASSERT_NEAR(ll.Longitude(), -122.0, 0.001);

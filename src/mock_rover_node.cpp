@@ -13,34 +13,40 @@ int main(int argc, char** argv){
     ros::init(argc, argv, "mock_rover");
     ros::NodeHandle nh;
 
+    // TODO: validate params.
+    float tick_rate;
+    ros::param::param<float>("mock_rover/tick_rate_hz", tick_rate, 10.0);
+
     // Sensors receive all vehicle state updates, and publish on their own respective schedules.
     // main() creates and owns the ROS publishers.
     std::vector<std::unique_ptr<Sensor>> sensors;
 
     // Odometer.
     std::string odom_topic;
+    float odom_pub_rate;
     ros::param::param<std::string>("mock_rover/odom_topic", odom_topic, "odom");
+    ros::param::param<float>("mock_rover/odometer/publish_rate", odom_pub_rate, tick_rate);
     ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>(odom_topic, 10);
     auto odom_pub_ptr = std::make_unique<ros::Publisher>(odom_pub);
-    sensors.push_back(std::make_unique<Odometer>(odom_pub_ptr));
+    sensors.push_back(std::make_unique<Odometer>(odom_pub_ptr, odom_pub_rate));
 
     // GPS.
     float map_origin_lat;
     float map_origin_lon;
-    ros::param::get("mock_rover/datum/lat", map_origin_lat);
-    ros::param::get("mock_rover/datum/lon", map_origin_lon);
+    float gps_publish_rate;
+    ros::param::get("mock_rover/gps/datum/lat", map_origin_lat);
+    ros::param::get("mock_rover/gps/datum/lon", map_origin_lon);
+    ros::param::param<float>("mock_rover/gps/publish_rate", gps_publish_rate, tick_rate);
     Datum datum{map_origin_lat, map_origin_lon, 0.0};
     std::string gps_topic;
     ros::param::param<std::string>("mock_rover/gps_topic", gps_topic, "gps");
     ros::Publisher gps_pub = nh.advertise<sensor_msgs::NavSatFix>(gps_topic, 10);
     auto gps_pub_ptr = std::make_unique<ros::Publisher>(gps_pub);
-    sensors.push_back(std::make_unique<Gps>(gps_pub_ptr, datum));
+    sensors.push_back(std::make_unique<Gps>(gps_pub_ptr, gps_publish_rate, datum));
 
     // TODO: implement IMU.
 
     // Model update timer, ticks all sensors at (1/MIN_TIME_STEP_S) Hz.
-    float tick_rate;
-    ros::param::param<float>("mock_rover/tick_rate_hz", tick_rate, 10.0);
     UnicycleModel um(tick_rate);
     ros::Timer model_update_timer = nh.createTimer(
             ros::Duration(1.0 / tick_rate),

@@ -17,12 +17,13 @@
 class Sensor {
 public:
     Sensor() = delete;
-    explicit Sensor(const std::unique_ptr<ros::Publisher>& pub) : pub_(pub) {}
+    explicit Sensor(const std::unique_ptr<ros::Publisher>& pub, double publish_rate) : pub_(pub), pub_rate_(publish_rate) {}
     virtual ~Sensor() = 0;
     virtual void update(const ros::TimerEvent& event, const VehicleState& vs) = 0;
 
 protected:
         const std::unique_ptr<ros::Publisher>& pub_;
+        double pub_rate_;
 };
 Sensor::~Sensor() = default;
 

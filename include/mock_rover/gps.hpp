@@ -18,7 +18,7 @@ class Gps : public Sensor {
 public:
     ~Gps() override = default;
     Gps() = delete;
-    explicit Gps(const std::unique_ptr<ros::Publisher>& pub, Datum datum) : Sensor(pub), datum_(datum) {}
+    explicit Gps(const std::unique_ptr<ros::Publisher>& pub, double publish_rate, Datum datum) : Sensor(pub, publish_rate), datum_(datum) {}
     void update(const ros::TimerEvent&, const VehicleState& vs) override;
     [[nodiscard]] GeographicLib::GeoCoords odom_to_lat_lon(double x, double y) const;
 private:
