@@ -52,5 +52,6 @@ Thumbs.db
 .catkin_tools
 build
 cmake-build-debug
+cmake-build-release
 devel
 logs
