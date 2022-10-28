@@ -16,15 +16,15 @@ public:
     Odometer(const Odometer& o) = delete;
     explicit Odometer(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel>& um);
     void update(const ros::TimerEvent& event) override;
+
+    static constexpr int PUB_QUEUE_SIZE = 10;
+    typedef nav_msgs::Odometry msg_type;
 };
 
 Odometer::Odometer(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel> &um)
     :Sensor(topic, publish_rate, um)
 {
-    // TODO: push this up to Sensor.
-    ros::NodeHandle nh;
-    publisher_ = nh.advertise<nav_msgs::Odometry>(topic, PUB_QUEUE_SIZE);
-    timer_ = nh.createTimer(ros::Duration(1.0 / pub_rate_), &Odometer::update, this);
+    Sensor::init<Odometer>(this);
 }
 
 // Construct a nav_msgs::Odometry message from the current vehicle state, and publish it.

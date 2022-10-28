@@ -22,6 +22,10 @@ public:
     explicit Gps(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel>& um, Datum datum);
     void update(const ros::TimerEvent&) override;
     [[nodiscard]] GeographicLib::GeoCoords odom_to_lat_lon(double x, double y) const;
+
+    static constexpr int PUB_QUEUE_SIZE = 10;
+    typedef sensor_msgs::NavSatFix msg_type;
+
 private:
     Datum datum_;
 };
@@ -29,10 +33,7 @@ private:
 Gps::Gps(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel> &um, Datum datum)
         :Sensor(topic, publish_rate, um), datum_(datum)
 {
-    // TODO: push this up to Sensor.
-    ros::NodeHandle nh;
-    publisher_ = nh.advertise<sensor_msgs::NavSatFix>(topic, PUB_QUEUE_SIZE);
-    timer_ = nh.createTimer(ros::Duration(1.0 / pub_rate_), &Gps::update, this);
+    Sensor::init<Gps>(this);
 }
 
 // Construct a nav_msgs::NavSatFix message from the current vehicle position, and publish it.
