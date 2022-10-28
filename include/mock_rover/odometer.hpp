@@ -21,6 +21,7 @@ public:
 Odometer::Odometer(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel> &um)
     :Sensor(topic, publish_rate, um)
 {
+    // TODO: push this up to Sensor.
     ros::NodeHandle nh;
     publisher_ = nh.advertise<nav_msgs::Odometry>(topic, PUB_QUEUE_SIZE);
     timer_ = nh.createTimer(ros::Duration(1.0 / pub_rate_), &Odometer::update, this);

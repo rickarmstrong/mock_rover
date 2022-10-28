@@ -31,18 +31,16 @@ int main(int argc, char** argv){
     Odometer odometer(odom_topic, odom_pub_rate, um);
 
     // GPS.
-//    float map_origin_lat;
-//    float map_origin_lon;
-//    float gps_publish_rate;
-//    ros::param::get("mock_rover/gps/datum/lat", map_origin_lat);
-//    ros::param::get("mock_rover/gps/datum/lon", map_origin_lon);
-//    ros::param::param<float>("mock_rover/gps/publish_rate", gps_publish_rate, tick_rate);
-//    Datum datum{map_origin_lat, map_origin_lon, 0.0};
-//    std::string gps_topic;
-//    ros::param::param<std::string>("mock_rover/gps_topic", gps_topic, "gps");
-//    ros::Publisher gps_pub = nh.advertise<sensor_msgs::NavSatFix>(gps_topic, 10);
-//    auto gps_pub_ptr = std::make_unique<ros::Publisher>(gps_pub);
-//    sensors.push_back(std::make_unique<Gps>(gps_pub_ptr, gps_publish_rate, datum));
+    float map_origin_lat;
+    float map_origin_lon;
+    float gps_publish_rate;
+    ros::param::get("mock_rover/gps/datum/lat", map_origin_lat);
+    ros::param::get("mock_rover/gps/datum/lon", map_origin_lon);
+    ros::param::param<float>("mock_rover/gps/publish_rate", gps_publish_rate, tick_rate);
+    Datum datum{map_origin_lat, map_origin_lon, 0.0};
+    std::string gps_topic;
+    ros::param::param<std::string>("mock_rover/gps_topic", gps_topic, "gps");
+    Gps gps(gps_topic, gps_publish_rate, um, datum);
 
     // TODO: implement IMU.
 
