@@ -18,22 +18,35 @@ class Gps : public Sensor {
 public:
     ~Gps() override = default;
     Gps() = delete;
-    explicit Gps(const std::unique_ptr<ros::Publisher>& pub, double publish_rate, Datum datum) : Sensor(pub, publish_rate), datum_(datum) {}
-    void update(const ros::TimerEvent&, const VehicleState& vs) override;
+    Gps(const Gps& g) = delete;
+    explicit Gps(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel>& um, Datum datum);
+    void update(const ros::TimerEvent&) override;
     [[nodiscard]] GeographicLib::GeoCoords odom_to_lat_lon(double x, double y) const;
+
+    static constexpr int PUB_QUEUE_SIZE = 10;
+    typedef sensor_msgs::NavSatFix msg_type;
+
 private:
     Datum datum_;
 };
 
-// Construct a nav_msgs::NavSatFix message from the current vehicle position, and publish it.
-void Gps::update(const ros::TimerEvent& event, const VehicleState& vs)
+Gps::Gps(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel> &um, Datum datum)
+        :Sensor(topic, publish_rate, um), datum_(datum)
 {
+    Sensor::init<Gps>(this);
+}
+
+// Construct a nav_msgs::NavSatFix message from the current vehicle position, and publish it.
+void Gps::update(const ros::TimerEvent& event)
+{
+    VehicleState vs = um_->get_vehicle_state();
+
     // TODO: populate header and covariances.
     GeographicLib::GeoCoords xy = odom_to_lat_lon(vs.x, vs.y);
     sensor_msgs::NavSatFix gps_msg;
     gps_msg.latitude = xy.Latitude();
     gps_msg.longitude = xy.Longitude();
-    pub_->publish(gps_msg);
+    publisher_.publish(gps_msg);
 }
 
 GeographicLib::GeoCoords Gps::odom_to_lat_lon(double x, double y) const

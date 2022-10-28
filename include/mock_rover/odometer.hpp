@@ -3,21 +3,35 @@
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 
+#include <utility>
+
 #include "mock_rover/sensor.hpp"
 
+constexpr int PUB_QUEUE_SIZE = 10;
+
 class Odometer : public Sensor {
-    // TODO: allow for differing publishing rates.
-    static constexpr double PUBLISH_RATE_HZ = 3.0;
 public:
     ~Odometer() override = default;
     Odometer() = delete;
     Odometer(const Odometer& o) = delete;
-    explicit Odometer(const std::unique_ptr<ros::Publisher>& pub, double publish_rate) : Sensor(pub, publish_rate) {}
-    void update(const ros::TimerEvent& event, const VehicleState& vs) override;
+    explicit Odometer(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel>& um);
+    void update(const ros::TimerEvent& event) override;
+
+    static constexpr int PUB_QUEUE_SIZE = 10;
+    typedef nav_msgs::Odometry msg_type;
 };
 
+Odometer::Odometer(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel> &um)
+    :Sensor(topic, publish_rate, um)
+{
+    Sensor::init<Odometer>(this);
+}
+
 // Construct a nav_msgs::Odometry message from the current vehicle state, and publish it.
-void Odometer::update(const ros::TimerEvent& event, const VehicleState& vs) {
+void Odometer::update(const ros::TimerEvent& event) {
+
+    VehicleState vs = um_->get_vehicle_state();
+
     // TODO: populate header and covariances.
     nav_msgs::Odometry odom_msg;
     odom_msg.header.frame_id = "odom";
@@ -38,6 +52,6 @@ void Odometer::update(const ros::TimerEvent& event, const VehicleState& vs) {
     // Velocities.
     odom_msg.twist.twist.linear.x = vs.x_dot;
     odom_msg.twist.twist.angular.z = vs.theta_dot;
-    pub_->publish(odom_msg);
+    publisher_.publish(odom_msg);
 }
 #endif //ODOMETER_HPP
