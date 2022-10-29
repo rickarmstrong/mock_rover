@@ -22,6 +22,7 @@ public:
     virtual ~Sensor() = 0;
     virtual void update(const ros::TimerEvent& event) = 0;
 
+protected:
     // Initialize our publisher and timer.
     template <typename T>
     void init(T* self){
@@ -29,7 +30,6 @@ public:
         publisher_ = nh.advertise<typename T::msg_type>(output_topic_, T::PUB_QUEUE_SIZE);
         timer_ = nh.createTimer<T>(ros::Duration(1.0 / pub_rate_), &T::update, self);
     }
-protected:
         const std::string output_topic_;
         const double pub_rate_;
         ros::Publisher publisher_;
