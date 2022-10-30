@@ -32,7 +32,10 @@ private:
     Datum datum_;
 };
 
-// Construct a nav_msgs::NavSatFix message from the current vehicle position, and publish it.
+/**
+ * Timer callback that constructs a nav_msgs::NavSatFix message from the current vehicle position, and publishes it.
+ * @param event Timing info from the ros::Timer that invoked the callback.
+ */
 void Gps::update(const ros::TimerEvent& event)
 {
     VehicleState vs = um_->get_vehicle_state();
@@ -45,6 +48,9 @@ void Gps::update(const ros::TimerEvent& event)
     publisher_.publish(gps_msg);
 }
 
+/**
+ * Transform a pair of x-y coordinates, expressed in the odometry frame, into lat/lon.
+ */
 GeographicLib::GeoCoords Gps::odom_to_lat_lon(double x, double y) const
 {
     // TODO: account for the map->odom transform.

@@ -19,6 +19,11 @@ class Sensor {
 public:
     Sensor() = delete;
     virtual ~Sensor() = 0;
+
+    /**
+     * Timer callback to be implemented by subclasses.
+     * @param event Timing info from the ros::Timer that invoked the callback.
+     */
     virtual void update(const ros::TimerEvent& event) = 0;
 
 protected:

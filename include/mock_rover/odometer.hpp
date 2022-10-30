@@ -21,7 +21,10 @@ public:
     typedef nav_msgs::Odometry msg_type;
 };
 
-// Construct a nav_msgs::Odometry message from the current vehicle state, and publish it.
+/**
+ * Timer callback that constructs a nav_msgs::Odometry message from the current vehicle state, and publishes it.
+ * @param event Timing info from the ros::Timer that invoked the callback.
+ */
 void Odometer::update(const ros::TimerEvent& event) {
 
     VehicleState vs = um_->get_vehicle_state();
