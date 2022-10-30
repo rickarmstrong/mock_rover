@@ -25,6 +25,11 @@ public:
     double theta_dot{};
 };
 
+/** \class UnicycleModel
+ *
+ * Extremely simplistic kinematic model of a wheeled robot that maintains an instance of VehicleState
+ * to track the robot's pose and velocities (linear, angular) in response to velocity commands.
+ */
 class UnicycleModel {
 public:
     explicit UnicycleModel(double tick_rate):
@@ -34,26 +39,37 @@ public:
     UnicycleModel() = delete;
     UnicycleModel(const UnicycleModel &other) = delete;
 
+    /**
+     * Set target velocities. The model will accelerate to reach these velocities over a number of time steps
+     * according to the robot's acceleration limits.
+     * @param cmd_vel
+     */
     void update_cmd_vel(const geometry_msgs::Twist &cmd_vel) {
         std::scoped_lock<std::mutex> lock(cur_cmd_vel_mutex_);
         cur_cmd_vel_ = geometry_msgs::Twist(cmd_vel);
     }
 
+    /**
+     * Increment the model state, by a single time step.
+     */
     void update_model() {
         std::scoped_lock<std::mutex, std::mutex> lock(vs_mutex_, cur_cmd_vel_mutex_);
 
-        // Increment the model state one time step.
+        // TODO: maybe make this a single matrix operation.
         incr_linear_vel();
         incr_angular_vel();
         incr_pose();
     }
 
+    /**
+     * @return A copy of the instantaneous VehicleState.
+     */
     VehicleState get_vehicle_state() {
         std::scoped_lock<std::mutex> lock(vs_mutex_);
         return VehicleState{vs_};
     }
 
-    double get_tick_rate() const { return tick_rate_; }
+    [[nodiscard]] double get_tick_rate() const { return tick_rate_; }
 
 private:
     double tick_rate_;

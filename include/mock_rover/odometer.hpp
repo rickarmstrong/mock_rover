@@ -14,18 +14,14 @@ public:
     ~Odometer() override = default;
     Odometer() = delete;
     Odometer(const Odometer& o) = delete;
-    explicit Odometer(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel>& um);
+    explicit Odometer(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel>& um)
+            :Sensor(topic, publish_rate, um, this) {}
     void update(const ros::TimerEvent& event) override;
 
+    // Publisher params.
     static constexpr int PUB_QUEUE_SIZE = 10;
     typedef nav_msgs::Odometry msg_type;
 };
-
-Odometer::Odometer(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel> &um)
-    :Sensor(topic, publish_rate, um)
-{
-    Sensor::init<Odometer>(this);
-}
 
 // Construct a nav_msgs::Odometry message from the current vehicle state, and publish it.
 void Odometer::update(const ros::TimerEvent& event) {
