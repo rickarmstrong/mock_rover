@@ -7,8 +7,6 @@
 
 #include "mock_rover/sensor.hpp"
 
-constexpr int PUB_QUEUE_SIZE = 10;
-
 class Odometer : public Sensor {
 public:
     ~Odometer() override = default;
