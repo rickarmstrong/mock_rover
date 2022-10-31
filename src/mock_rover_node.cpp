@@ -18,7 +18,7 @@ int main(int argc, char** argv){
     ros::param::param<float>("mock_rover/tick_rate_hz", tick_rate, 10.0);
 
     // Kinematic model.
-    std::unique_ptr<UnicycleModel> um(std::make_unique<UnicycleModel>(tick_rate));
+    auto um(std::make_unique<UnicycleModel>(tick_rate));
 
     // Model update timer, ticks all sensors at tick_rate Hz.
     ros::Timer model_update_timer = nh.createTimer(

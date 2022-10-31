@@ -22,7 +22,7 @@ public:
     explicit Gps(const std::string& topic, double publish_rate, std::unique_ptr<UnicycleModel>& um, Datum datum)
             :Sensor(topic, publish_rate, um, this), datum_(datum) {};
     void update(const ros::TimerEvent&) override;
-    [[nodiscard]] GeographicLib::GeoCoords odom_to_lat_lon(double x, double y) const;
+    [[nodiscard]] static GeographicLib::GeoCoords odom_to_lat_lon(double x, double y, Datum datum);
 
     // Publisher params.
     static constexpr int PUB_QUEUE_SIZE = 10;
@@ -41,7 +41,7 @@ void Gps::update(const ros::TimerEvent& event)
     VehicleState vs = um_->get_vehicle_state();
 
     // TODO: populate header and covariances.
-    GeographicLib::GeoCoords xy = odom_to_lat_lon(vs.x, vs.y);
+    GeographicLib::GeoCoords xy = odom_to_lat_lon(vs.x, vs.y, datum_);
     sensor_msgs::NavSatFix gps_msg;
     gps_msg.latitude = xy.Latitude();
     gps_msg.longitude = xy.Longitude();
@@ -51,10 +51,10 @@ void Gps::update(const ros::TimerEvent& event)
 /**
  * Transform a pair of x-y coordinates, expressed in the odometry frame, into lat/lon.
  */
-GeographicLib::GeoCoords Gps::odom_to_lat_lon(double x, double y) const
+GeographicLib::GeoCoords Gps::odom_to_lat_lon(double x, double y, Datum datum)
 {
     // TODO: account for the map->odom transform.
-    GeographicLib::GeoCoords map_origin{datum_.lat, datum_.lon};
+    GeographicLib::GeoCoords map_origin{datum.lat, datum.lon};
     GeographicLib::GeoCoords ll{
         map_origin.Zone(),
         map_origin.Northp(),
