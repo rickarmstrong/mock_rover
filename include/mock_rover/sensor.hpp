@@ -12,7 +12,8 @@
 /** \class Sensor
  *
  * Abstract base class for a sensor model that takes the instantaneous vehicle state,
- * transforms the data in some way, and publishes on a single ROS topic.
+ * transforms the data in some way, and publishes on a single ROS topic. Publishing occurs
+ * on a schedule set by subclasses, using a constructor template supplied by Sensor.
  * We assume that every subclass publishes to _one_ topic.
  */
 class Sensor {

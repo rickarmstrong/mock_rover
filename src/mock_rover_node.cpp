@@ -48,8 +48,12 @@ int main(int argc, char** argv){
 
     // cmd_vel message subscriber.
     std::string cmd_vel_topic;
+    constexpr uint32_t sub_queue_size{1};
     ros::param::param<std::string>("mock_rover/cmd_vel_topic", cmd_vel_topic, "cmd_vel");
-    ros::Subscriber cmd_vel_sub = nh.subscribe<geometry_msgs::Twist>(cmd_vel_topic, 1, boost::bind(cmd_vel_cb, _1, std::ref(um)));
+    ros::Subscriber cmd_vel_sub = nh.subscribe<geometry_msgs::Twist>(
+            cmd_vel_topic,
+            sub_queue_size,
+            [&um](const geometry_msgs::TwistConstPtr& cmd_vel){ um->update_cmd_vel(*cmd_vel); });
 
     // Go.
     ros::spin();
