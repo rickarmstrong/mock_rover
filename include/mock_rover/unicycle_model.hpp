@@ -61,7 +61,7 @@ public:
         incr_pose();
     }
 
-    /**
+    /** Thread-safe getter that provides access to the internally-managed VehicleState.
      * @return A copy of the instantaneous VehicleState.
      */
     VehicleState get_vehicle_state() {
