@@ -8,6 +8,7 @@
 #include "mock_rover/mock_rover.hpp"
 #include "mock_rover/odometer.hpp"
 #include "mock_rover/gps.hpp"
+#include "mock_rover/imu.hpp"
 
 int main(int argc, char** argv){
     ros::init(argc, argv, "mock_rover");
@@ -44,7 +45,12 @@ int main(int argc, char** argv){
     ros::param::param<std::string>("mock_rover/gps_topic", gps_topic, "gps");
     Gps gps(gps_topic, gps_publish_rate, um, datum);
 
-    // TODO: implement IMU.
+    // IMU.
+    float imu_publish_rate;
+    ros::param::param<float>("mock_rover/imu/publish_rate", imu_publish_rate, tick_rate);
+    std::string imu_topic;
+    ros::param::param<std::string>("mock_rover/imu_topic", imu_topic, "/imu/data");
+    Imu imu(imu_topic, imu_publish_rate, um);
 
     // cmd_vel message subscriber.
     std::string cmd_vel_topic;
