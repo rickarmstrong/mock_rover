@@ -42,14 +42,14 @@ int main(int argc, char** argv){
     ros::param::param<float>("mock_rover/gps/publish_rate", gps_publish_rate, tick_rate);
     Datum datum{map_origin_lat, map_origin_lon, 0.0};
     std::string gps_topic;
-    ros::param::param<std::string>("mock_rover/gps_topic", gps_topic, "gps");
+    ros::param::param<std::string>("mock_rover/gps/topic", gps_topic, "gps");
     Gps gps(gps_topic, gps_publish_rate, um, datum);
 
     // IMU.
     float imu_publish_rate;
     ros::param::param<float>("mock_rover/imu/publish_rate", imu_publish_rate, tick_rate);
     std::string imu_topic;
-    ros::param::param<std::string>("mock_rover/imu_topic", imu_topic, "/imu/data");
+    ros::param::param<std::string>("mock_rover/imu/topic", imu_topic, "/imu/data");
     Imu imu(imu_topic, imu_publish_rate, um);
 
     // cmd_vel message subscriber.
