@@ -31,7 +31,8 @@ void Imu::update(const ros::TimerEvent &event)
     // Populate the new message. Assume things about the (unicycle) model, namely
     // that only x-axis motion and z-axis rotation are possible.
     sensor_msgs::Imu msg;
-    msg.linear_acceleration.x = cur_state.x_dot - prev_state.x_dot;
+    double delta_t = event.current_real.toSec() - event.last_real.toSec();
+    msg.linear_acceleration.x = (cur_state.x_dot - prev_state.x_dot) / delta_t;
     msg.linear_acceleration.y = 0;
     msg.linear_acceleration.z = 0;
     msg.angular_velocity.x = 0;

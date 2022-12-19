@@ -4,7 +4,7 @@ mock_rover:
   odom_topic: /mock_rover/odom
   base_frame: base_link
   odom_frame: odom
-  tick_rate_hz: 20.0
+  tick_rate_hz: 100.0
 
   gps:
     datum:
